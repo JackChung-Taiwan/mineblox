@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roblox 程式教學 Google Sites 嵌入頁</title>
+  <style>
+    :root {
+      --orange: #ff8a00;
+      --green: #29c76f;
+      --dark: #101827;
+      --dark2: #172033;
+      --card: #ffffff;
+      --light: #f5f7fb;
+      --text: #1f2937;
+      --muted: #667085;
+      --border: #e5e7eb;
+      --code: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #fff7ed 0%, #ecfdf5 45%, #eef2ff 100%);
+      color: var(--text);
+    }
+
+    .site-wrap {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(16, 24, 39, 0.94);
+      color: #fff;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(16, 24, 39, 0.18);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--orange), var(--green));
+      color: #111827;
+      font-weight: 900;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+    }
+
+    .menu-btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      background: var(--orange);
+      color: #111827;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(255, 138, 0, 0.32);
+    }
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 64px);
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 64px;
+      z-index: 18;
+      width: 290px;
+      height: calc(100vh - 64px);
+      background: rgba(255,255,255,0.98);
+      border-right: 1px solid var(--border);
+      box-shadow: 14px 0 30px rgba(17, 24, 39, 0.12);
+      transform: translateX(-100%);
+      transition: transform 0.28s ease;
+      padding: 18px;
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .sidebar h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      color: var(--dark);
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 8px 0;
+      padding: 12px 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 800;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      border-color: rgba(255, 138, 0, 0.55);
+      background: linear-gradient(135deg, #fff7ed, #ecfdf5);
+      transform: translateY(-1px);
+    }
+
+    .nav-index {
+      display: grid;
+      place-items: center;
+      min-width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: var(--dark);
+      color: #fff;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+
+    .nav-title {
+      display: flex;
+      align-items: center;
+    }
+
+    .content {
+      width: 100%;
+      padding: 22px;
+    }
+
+    .hero {
+      border-radius: 28px;
+      padding: 28px;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,138,0,0.24), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(41,199,111,0.24), transparent 28%),
+        linear-gradient(135deg, #111827, #1f2937);
+      color: #fff;
+      box-shadow: 0 20px 44px rgba(17, 24, 39, 0.2);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      bottom: -40px;
+      width: 180px;
+      height: 180px;
+      border: 18px solid rgba(255,255,255,0.08);
+      border-radius: 36px;
+      transform: rotate(18deg);
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.1;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      color: rgba(255,255,255,0.82);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .section {
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      grid-column: span 12;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid rgba(229,231,235,0.86);
+      padding: 22px;
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+    }
+
+    .card.half {
+      grid-column: span 6;
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      color: var(--dark);
+      font-size: 25px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      color: var(--dark);
+      font-size: 19px;
+    }
+
+    .card p,
+    .card li {
+      line-height: 1.8;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .steps {
+      counter-reset: step;
+      padding: 0;
+      margin: 12px 0 0;
+      list-style: none;
+    }
+
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 12px 12px 12px 52px;
+      margin: 10px 0;
+      border-radius: 16px;
+      background: var(--light);
+      color: var(--text);
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--orange), var(--green));
+      color: #111827;
+      font-weight: 900;
+    }
+
+    .code-card {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .code-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--dark2);
+      color: #fff;
+    }
+
+    .code-head strong {
+      font-size: 15px;
+    }
+
+    .copy-btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 12px;
+      background: var(--green);
+      color: #082f1a;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px;
+      background: var(--code);
+      color: #e5e7eb;
+      overflow: auto;
+      font-size: 14px;
+      line-height: 1.65;
+      max-height: 430px;
+    }
+
+    code {
+      font-family: Consolas, Monaco, "Courier New", monospace;
+    }
+
+    .download-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #fff7ed, #ecfdf5);
+      border: 1px dashed rgba(255, 138, 0, 0.75);
+    }
+
+    .main-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 14px;
+      padding: 12px 18px;
+      background: linear-gradient(135deg, var(--orange), var(--green));
+      color: #111827;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 10px 22px rgba(41, 199, 111, 0.18);
+    }
+
+    .note {
+      border-left: 6px solid var(--orange);
+      background: #fff7ed;
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: #7c2d12;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 64px 0 0 0;
+      background: rgba(15, 23, 42, 0.25);
+      z-index: 17;
+      display: none;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    .footer {
+      padding: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (min-width: 1100px) {
+      .sidebar {
+        position: sticky;
+        transform: none;
+        flex: 0 0 290px;
+      }
+
+      .overlay {
+        display: none !important;
+      }
+
+      .content {
+        max-width: calc(100% - 290px);
+      }
+
+      .menu-btn {
+        display: none;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .content {
+        padding: 14px;
+      }
+
+      .hero {
+        padding: 22px;
+        border-radius: 22px;
+      }
+
+      .card.half {
+        grid-column: span 12;
+      }
+
+      .topbar {
+        top: 0;
+      }
+
+      .sidebar {
+        top: 62px;
+        height: calc(100vh - 62px);
+      }
+
+      .overlay {
+        inset: 62px 0 0 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-badge">R</div>
+        <div>Roblox 程式教學站</div>
+      </div>
+      <button class="menu-btn" onclick="toggleMenu()">☰ 課程選單</button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <h3>滑動教學選單</h3>
+        <button class="nav-btn active" onclick="showSection('intro', this)">
+          <span class="nav-title"><span class="nav-index">1</span>首頁介紹</span><span>›</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('lesson1', this)">
+          <span class="nav-title"><span class="nav-index">2</span>基本程式碼</span><span>›</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('lesson2', this)">
+          <span class="nav-title"><span class="nav-index">3</span>角色移動</span><span>›</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('lesson3', this)">
+          <span class="nav-title"><span class="nav-index">4</span>得分系統</span><span>›</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('lesson4', this)">
+          <span class="nav-title"><span class="nav-index">5</span>遊戲物件</span><span>›</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('download', this)">
+          <span class="nav-title"><span class="nav-index">6</span>檔案下載</span><span>›</span>
+        </button>
+      </aside>
+
+      <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+
+      <main class="content">
+        <section class="hero">
+          <h1>Roblox Studio 教學成果頁</h1>
+          <p>
+            這是一個可放入 Google Sites 的互動式教學頁面，左側提供滑動章節選單，
+            每個章節都可以放置 Lua 程式碼、教學步驟與學生練習任務。
+          </p>
+          <div class="chips">
+            <span class="chip">Google Sites 可嵌入</span>
+            <span class="chip">滑動選單</span>
+            <span class="chip">程式碼展示</span>
+            <span class="chip">一鍵複製</span>
+          </div>
+        </section>
+
+        <section id="intro" class="section active">
+          <div class="grid">
+            <div class="card half">
+              <h2>課程用途</h2>
+              <p>
+                這個頁面適合用在 Roblox 教學網站、學生作品展示、課程進度整理、
+                寒暑假營隊教材或線上自學平台。
+              </p>
+            </div>
+            <div class="card half">
+              <h2>使用方式</h2>
+              <ol class="steps">
+                <li>在左側選單切換不同課程章節。</li>
+                <li>閱讀教學重點與操作步驟。</li>
+                <li>點擊「複製程式碼」貼到 Roblox Studio。</li>
+                <li>完成任務後可加入自己的創意設計。</li>
+              </ol>
+            </div>
+            <div class="card">
+              <h2>Google Sites 嵌入建議</h2>
+              <p class="note">
+                若 Google Sites 無法完整執行 JavaScript，建議改用「完整網頁連結」方式：
+                將本 HTML 上傳到 GitHub Pages、Netlify 或 Google Drive 網頁空間後，再用 Google Sites 嵌入網址。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="lesson1" class="section">
+          <div class="grid">
+            <div class="card">
+              <h2>第 1 課：基本 Lua 程式碼</h2>
+              <p>認識 Roblox Studio 的 Script，學習如何在 Output 視窗輸出文字。</p>
+            </div>
+            <div class="card code-card">
+              <div class="code-head">
+                <strong>Script：輸出歡迎文字</strong>
+                <button class="copy-btn" onclick="copyCode('code1')">複製程式碼</button>
+              </div>
+              <pre><code id="code1">print("歡迎來到 Roblox 程式設計課！")
+print("今天我們要學習 Lua 基礎語法。")
+
+local courseName = "Roblox 遊戲設計"
+print("課程名稱：" .. courseName)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="lesson2" class="section">
+          <div class="grid">
+            <div class="card">
+              <h2>第 2 課：角色移動速度</h2>
+              <p>學習取得玩家角色，並調整 Humanoid 的 WalkSpeed 與 JumpPower。</p>
+            </div>
+            <div class="card code-card">
+              <div class="code-head">
+                <strong>LocalScript：調整玩家速度</strong>
+                <button class="copy-btn" onclick="copyCode('code2')">複製程式碼</button>
+              </div>
+              <pre><code id="code2">local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local function setupCharacter(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    humanoid.WalkSpeed = 24
+    humanoid.JumpPower = 70
+end
+
+if player.Character then
+    setupCharacter(player.Character)
+end
+
+player.CharacterAdded:Connect(setupCharacter)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="lesson3" class="section">
+          <div class="grid">
+            <div class="card">
+              <h2>第 3 課：得分系統 Leaderstats</h2>
+              <p>建立排行榜分數，讓玩家進入遊戲後自動擁有 Score 欄位。</p>
+            </div>
+            <div class="card code-card">
+              <div class="code-head">
+                <strong>ServerScriptService：建立分數</strong>
+                <button class="copy-btn" onclick="copyCode('code3')">複製程式碼</button>
+              </div>
+              <pre><code id="code3">local Players = game:GetService("Players")
+
+Players.PlayerAdded:Connect(function(player)
+    local leaderstats = Instance.new("Folder")
+    leaderstats.Name = "leaderstats"
+    leaderstats.Parent = player
+
+    local score = Instance.new("IntValue")
+    score.Name = "Score"
+    score.Value = 0
+    score.Parent = leaderstats
+end)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="lesson4" class="section">
+          <div class="grid">
+            <div class="card">
+              <h2>第 4 課：碰到物件加分</h2>
+              <p>把此 Script 放入 Part 裡面，玩家碰到物件後即可加分。</p>
+            </div>
+            <div class="card code-card">
+              <div class="code-head">
+                <strong>Part Script：碰到加分</strong>
+                <button class="copy-btn" onclick="copyCode('code4')">複製程式碼</button>
+              </div>
+              <pre><code id="code4">local part = script.Parent
+local debounce = false
+
+part.Touched:Connect(function(hit)
+    if debounce then return end
+
+    local character = hit.Parent
+    local humanoid = character:FindFirstChild("Humanoid")
+
+    if humanoid then
+        debounce = true
+
+        local player = game.Players:GetPlayerFromCharacter(character)
+        if player then
+            local score = player.leaderstats:FindFirstChild("Score")
+            if score then
+                score.Value = score.Value + 10
+            end
+        end
+
+        part.Transparency = 0.5
+        task.wait(1)
+        part.Transparency = 0
+        debounce = false
+    end
+end)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="download" class="section">
+          <div class="grid">
+            <div class="card">
+              <h2>專案檔下載區</h2>
+              <p>
+                你可以把 Roblox 專案檔上傳到 Google Drive，取得分享連結後，
+                將下方按鈕的網址改成你的 Drive 下載連結。
+              </p>
+              <div class="download-box">
+                <a class="main-btn" href="#" onclick="alert('請先將 .rbxl 上傳到 Google Drive，再把這個按鈕連結改成 Drive 分享連結。'); return false;">下載 Roblox 專案檔</a>
+                <span>檔案範例：定稿版.rbxl</span>
+              </div>
+            </div>
+
+            <div class="card code-card">
+              <div class="code-head">
+                <strong>Google Drive 按鈕範例</strong>
+                <button class="copy-btn" onclick="copyCode('code5')">複製程式碼</button>
+              </div>
+              <pre><code id="code5">&lt;a class="main-btn" href="你的 Google Drive 分享連結" target="_blank"&gt;
+  下載 Roblox 專案檔
+&lt;/a&gt;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <div class="footer">
+          翊華教育｜Roblox Studio 程式設計教學頁
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu(force) {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const shouldOpen = typeof force === "boolean" ? force : !sidebar.classList.contains("open");
+      sidebar.classList.toggle("open", shouldOpen);
+      overlay.classList.toggle("show", shouldOpen);
+    }
+
+    function showSection(id, btn) {
+      document.querySelectorAll(".section").forEach(section => {
+        section.classList.remove("active");
+      });
+      document.getElementById(id).classList.add("active");
+
+      document.querySelectorAll(".nav-btn").forEach(nav => {
+        nav.classList.remove("active");
+      });
+      btn.classList.add("active");
+
+      if (window.innerWidth < 1100) {
+        toggleMenu(false);
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function copyCode(id) {
+      const code = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        alert("程式碼已複製，可以貼到 Roblox Studio。");
+      }).catch(() => {
+        alert("無法自動複製，請手動選取程式碼。");
+      });
+    }
+  </script>
+</body>
+</html>
