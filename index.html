@@ -1,1012 +1,492 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Roblox 教學頁｜可編輯 Google Sites 嵌入版</title>
-  <style>
-    :root {
-      --orange: #ff8a00;
-      --green: #29c76f;
-      --dark: #101827;
-      --dark2: #172033;
-      --card: #ffffff;
-      --light: #f5f7fb;
-      --text: #1f2937;
-      --muted: #667085;
-      --border: #e5e7eb;
-      --code: #0f172a;
-      --danger: #ef4444;
-      --blue: #2563eb;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
-      background: linear-gradient(135deg, #fff7ed 0%, #ecfdf5 45%, #eef2ff 100%);
-      color: var(--text);
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 18px;
-      background: rgba(16, 24, 39, 0.95);
-      color: #fff;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 24px rgba(16, 24, 39, 0.18);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-    }
-
-    .brand-badge {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--orange), var(--green));
-      color: #111827;
-      font-weight: 900;
-      box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
-    }
-
-    .top-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    button, .btn {
-      border: 0;
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-weight: 900;
-      cursor: pointer;
-      font-family: inherit;
-      transition: 0.18s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    button:hover, .btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.03);
-    }
-
-    .menu-btn { background: var(--orange); color: #111827; }
-    .edit-btn { background: var(--green); color: #082f1a; }
-    .save-btn { background: var(--blue); color: white; }
-    .light-btn { background: #fff; color: var(--dark); border: 1px solid var(--border); }
-    .danger-btn { background: var(--danger); color: white; }
-    .gray-btn { background: #e5e7eb; color: #111827; }
-
-    .layout {
-      display: flex;
-      min-height: calc(100vh - 64px);
-    }
-
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 64px;
-      z-index: 25;
-      width: 300px;
-      height: calc(100vh - 64px);
-      background: rgba(255,255,255,0.98);
-      border-right: 1px solid var(--border);
-      box-shadow: 14px 0 30px rgba(17, 24, 39, 0.12);
-      transform: translateX(-100%);
-      transition: transform 0.28s ease;
-      padding: 18px;
-      overflow-y: auto;
-    }
-
-    .sidebar.open { transform: translateX(0); }
-
-    .sidebar h3 {
-      margin: 0 0 12px;
-      font-size: 18px;
-      color: var(--dark);
-    }
-
-    .nav-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 8px 0;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: #fff;
-      color: var(--text);
-      font-size: 15px;
-      text-align: left;
-    }
-
-    .nav-btn:hover, .nav-btn.active {
-      border-color: rgba(255, 138, 0, 0.55);
-      background: linear-gradient(135deg, #fff7ed, #ecfdf5);
-    }
-
-    .nav-title {
-      display: flex;
-      align-items: center;
-      min-width: 0;
-      gap: 8px;
-    }
-
-    .nav-index {
-      display: grid;
-      place-items: center;
-      min-width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      background: var(--dark);
-      color: #fff;
-      font-size: 12px;
-    }
-
-    .nav-text {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .content {
-      width: 100%;
-      padding: 22px;
-    }
-
-    .overlay {
-      position: fixed;
-      inset: 64px 0 0 0;
-      background: rgba(15, 23, 42, 0.25);
-      z-index: 24;
-      display: none;
-    }
-    .overlay.show { display: block; }
-
-    .hero {
-      border-radius: 28px;
-      padding: 28px;
-      background:
-        radial-gradient(circle at 15% 20%, rgba(255,138,0,0.24), transparent 28%),
-        radial-gradient(circle at 90% 10%, rgba(41,199,111,0.24), transparent 28%),
-        linear-gradient(135deg, #111827, #1f2937);
-      color: #fff;
-      box-shadow: 0 20px 44px rgba(17, 24, 39, 0.2);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero h1 {
-      margin: 0 0 10px;
-      font-size: clamp(28px, 4vw, 46px);
-      line-height: 1.12;
-    }
-
-    .hero p {
-      margin: 0;
-      max-width: 820px;
-      color: rgba(255,255,255,0.84);
-      font-size: 17px;
-      line-height: 1.8;
-      white-space: pre-wrap;
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .chip {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      font-weight: 800;
-      font-size: 13px;
-    }
-
-    .section {
-      margin-top: 20px;
-      display: none;
-      animation: fadeIn 0.25s ease;
-    }
-
-    .section.active { display: block; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 18px;
-    }
-
-    .card {
-      grid-column: span 12;
-      border-radius: 24px;
-      background: var(--card);
-      border: 1px solid rgba(229,231,235,0.86);
-      padding: 22px;
-      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
-    }
-
-    .card.half { grid-column: span 6; }
-
-    .card h2 {
-      margin: 0 0 12px;
-      color: var(--dark);
-      font-size: 25px;
-    }
-
-    .card p, .card li {
-      line-height: 1.85;
-      color: var(--muted);
-      font-size: 16px;
-      white-space: pre-wrap;
-    }
-
-    .code-card {
-      overflow: hidden;
-      padding: 0;
-    }
-
-    .code-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 16px;
-      background: var(--dark2);
-      color: #fff;
-    }
-
-    .copy-btn {
-      background: var(--green);
-      color: #082f1a;
-      font-size: 14px;
-      padding: 8px 12px;
-    }
-
-    pre {
-      margin: 0;
-      padding: 18px;
-      background: var(--code);
-      color: #e5e7eb;
-      overflow: auto;
-      font-size: 14px;
-      line-height: 1.65;
-      max-height: 430px;
-    }
-
-    code {
-      font-family: Consolas, Monaco, "Courier New", monospace;
-    }
-
-    .download-box {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      padding: 16px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #fff7ed, #ecfdf5);
-      border: 1px dashed rgba(255, 138, 0, 0.75);
-    }
-
-    .main-btn {
-      border-radius: 14px;
-      padding: 12px 18px;
-      background: linear-gradient(135deg, var(--orange), var(--green));
-      color: #111827;
-      font-weight: 900;
-      text-decoration: none;
-      box-shadow: 0 10px 22px rgba(41, 199, 111, 0.18);
-    }
-
-    .editor-panel {
-      position: fixed;
-      right: 0;
-      top: 64px;
-      z-index: 35;
-      width: min(560px, 100vw);
-      height: calc(100vh - 64px);
-      background: rgba(255,255,255,0.99);
-      border-left: 1px solid var(--border);
-      box-shadow: -16px 0 34px rgba(15, 23, 42, 0.18);
-      transform: translateX(100%);
-      transition: 0.28s ease;
-      overflow: auto;
-      padding: 18px;
-    }
-
-    .editor-panel.open { transform: translateX(0); }
-
-    .editor-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .editor-header h2 {
-      margin: 0;
-      font-size: 22px;
-      color: var(--dark);
-    }
-
-    .editor-card {
-      border: 1px solid var(--border);
-      background: #fff;
-      border-radius: 18px;
-      padding: 14px;
-      margin: 12px 0;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
-    }
-
-    .field {
-      display: grid;
-      gap: 6px;
-      margin: 10px 0;
-    }
-
-    label {
-      font-weight: 900;
-      color: var(--dark);
-      font-size: 14px;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 15px;
-      font-family: inherit;
-      outline: none;
-      background: #fff;
-    }
-
-    textarea {
-      min-height: 110px;
-      resize: vertical;
-      line-height: 1.55;
-    }
-
-    textarea.code-input {
-      min-height: 190px;
-      font-family: Consolas, Monaco, "Courier New", monospace;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
-
-    .row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .mini-note {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin: 6px 0;
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 22px;
-      transform: translateX(-50%) translateY(80px);
-      z-index: 100;
-      background: #111827;
-      color: #fff;
-      border-radius: 999px;
-      padding: 11px 16px;
-      font-weight: 800;
-      opacity: 0;
-      transition: 0.25s;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .footer {
-      padding: 18px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    @media (min-width: 1100px) {
-      .sidebar {
-        position: sticky;
-        transform: none;
-        flex: 0 0 300px;
-      }
-      .overlay { display: none !important; }
-      .content { max-width: calc(100% - 300px); }
-      .menu-btn { display: none; }
-    }
-
-    @media (max-width: 820px) {
-      .content { padding: 14px; }
-      .hero { padding: 22px; border-radius: 22px; }
-      .card.half { grid-column: span 12; }
-      .topbar { align-items: flex-start; }
-      .brand { margin-top: 4px; }
-      .top-actions button { padding: 8px 10px; font-size: 13px; }
-      .sidebar, .editor-panel {
-        top: 66px;
-        height: calc(100vh - 66px);
-      }
-      .overlay { inset: 66px 0 0 0; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roblox 程式碼滑動選單教學頁</title>
+<style>
+  :root{
+    --orange:#ff8a00;
+    --green:#22c55e;
+    --dark:#111827;
+    --dark2:#1f2937;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#667085;
+    --border:#e5e7eb;
+    --code:#0f172a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;
+    background:linear-gradient(135deg,#fff7ed,#ecfdf5,#eff6ff);
+    color:var(--text);
+  }
+  .header{
+    background:linear-gradient(135deg,var(--dark),var(--dark2));
+    color:#fff;
+    padding:18px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:900;
+    font-size:20px;
+  }
+  .logo{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--orange),var(--green));
+    color:#111827;
+    display:grid;
+    place-items:center;
+    font-weight:900;
+  }
+  .menu-toggle{
+    border:0;
+    border-radius:12px;
+    background:var(--orange);
+    color:#111827;
+    padding:10px 14px;
+    font-weight:900;
+    cursor:pointer;
+  }
+  .layout{
+    display:grid;
+    grid-template-columns:300px 1fr;
+    min-height:calc(100vh - 74px);
+  }
+  .sidebar{
+    background:rgba(255,255,255,.96);
+    border-right:1px solid var(--border);
+    padding:16px;
+    overflow:auto;
+  }
+  .sidebar-title{
+    font-weight:900;
+    color:var(--dark);
+    margin-bottom:12px;
+  }
+  .nav-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin:8px 0;
+    padding:12px;
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:14px;
+    font-weight:900;
+    color:var(--text);
+    cursor:pointer;
+    text-align:left;
+  }
+  .nav-btn:hover,.nav-btn.active{
+    background:linear-gradient(135deg,#fff7ed,#ecfdf5);
+    border-color:var(--orange);
+  }
+  .nav-left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    min-width:0;
+  }
+  .nav-num{
+    width:26px;
+    height:26px;
+    border-radius:8px;
+    background:var(--dark);
+    color:white;
+    display:grid;
+    place-items:center;
+    font-size:12px;
+    flex-shrink:0;
+  }
+  .nav-text{
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
+  .content{
+    padding:22px;
+  }
+  .hero{
+    background:
+      radial-gradient(circle at top left,rgba(255,138,0,.25),transparent 30%),
+      radial-gradient(circle at top right,rgba(34,197,94,.24),transparent 30%),
+      linear-gradient(135deg,#111827,#1f2937);
+    color:white;
+    border-radius:26px;
+    padding:28px;
+    box-shadow:0 16px 34px rgba(15,23,42,.18);
+    margin-bottom:20px;
+  }
+  .hero h1{
+    margin:0 0 10px;
+    font-size:clamp(28px,4vw,44px);
+  }
+  .hero p{
+    margin:0;
+    color:rgba(255,255,255,.82);
+    line-height:1.8;
+    font-size:16px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    box-shadow:0 12px 28px rgba(15,23,42,.08);
+    overflow:hidden;
+    margin-bottom:18px;
+  }
+  .lesson-body{
+    padding:22px;
+  }
+  .lesson-body h2{
+    margin:0 0 12px;
+    font-size:28px;
+    color:var(--dark);
+  }
+  .lesson-body p{
+    line-height:1.85;
+    white-space:pre-wrap;
+    color:var(--muted);
+    font-size:16px;
+  }
+  .meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:14px;
+  }
+  .tag{
+    padding:8px 12px;
+    background:#f3f4f6;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:900;
+    color:#374151;
+  }
+  .code-head{
+    background:var(--dark2);
+    color:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:14px 16px;
+  }
+  .copy-btn{
+    border:0;
+    border-radius:10px;
+    background:var(--green);
+    color:#052e16;
+    padding:8px 12px;
+    font-weight:900;
+    cursor:pointer;
+  }
+  pre{
+    margin:0;
+    background:var(--code);
+    color:#e5e7eb;
+    overflow:auto;
+    padding:18px;
+    max-height:520px;
+    line-height:1.65;
+    font-size:14px;
+  }
+  code{
+    font-family:Consolas,Monaco,"Courier New",monospace;
+  }
+  .notice{
+    background:#fff7ed;
+    border-left:6px solid var(--orange);
+    border-radius:14px;
+    padding:14px 16px;
+    color:#7c2d12;
+    font-weight:800;
+    line-height:1.7;
+    margin-bottom:18px;
+  }
+  @media(max-width:860px){
+    .layout{grid-template-columns:1fr;}
+    .sidebar{display:none;border-right:0;border-bottom:1px solid var(--border);}
+    .sidebar.open{display:block;}
+    .content{padding:14px;}
+    .hero{border-radius:20px;padding:22px;}
+  }
+</style>
 </head>
 <body>
-  <header class="topbar">
+<div class="app">
+  <header class="header">
     <div class="brand">
-      <div class="brand-badge">R</div>
-      <div id="siteBrand">Roblox 程式教學站</div>
+      <div class="logo">R</div>
+      <div>Roblox 程式碼教學選單</div>
     </div>
-    <div class="top-actions">
-      <button class="menu-btn" onclick="toggleMenu()">☰ 課程選單</button>
-      <button class="edit-btn" onclick="toggleEditor()">✏️ 編輯區塊</button>
-    </div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰ 開啟 / 關閉選單</button>
   </header>
 
   <div class="layout">
     <aside class="sidebar" id="sidebar">
-      <h3>滑動教學選單</h3>
-      <div id="navList"></div>
+      <div class="sidebar-title">滑動選單</div>
+      <div id="menu"></div>
     </aside>
-
-    <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
 
     <main class="content">
       <section class="hero">
-        <h1 id="heroTitle"></h1>
-        <p id="heroDesc"></p>
-        <div class="chips">
-          <span class="chip">Google Sites 可嵌入</span>
-          <span class="chip">可新增區塊</span>
-          <span class="chip">可修改內容</span>
-          <span class="chip">一鍵複製程式碼</span>
-        </div>
+        <h1>Mineblox / Roblox 教學程式碼整理</h1>
+        <p>
+          將 Roblox Studio 裡不同 Script、LocalScript、ServerScript 分別整理成教學選單。
+          學生可依照章節切換內容，閱讀說明後複製程式碼貼到指定位置。
+        </p>
       </section>
 
-      <div id="sections"></div>
+      <div class="notice">
+        修改方式：在 HTML 程式碼最下方找到 lessons，把每一個區塊的 title、place、description、code 改成你的內容即可。
+      </div>
 
-      <div class="footer" id="footerText"></div>
+      <section class="card">
+        <div class="lesson-body">
+          <h2 id="lessonTitle"></h2>
+          <p id="lessonDescription"></p>
+          <div class="meta">
+            <span class="tag" id="lessonPlace"></span>
+            <span class="tag" id="lessonType"></span>
+          </div>
+        </div>
+
+        <div class="code-head">
+          <strong id="codeTitle">程式碼</strong>
+          <button class="copy-btn" onclick="copyCurrentCode()">複製程式碼</button>
+        </div>
+        <pre><code id="lessonCode"></code></pre>
+      </section>
     </main>
   </div>
+</div>
 
-  <aside class="editor-panel" id="editorPanel">
-    <div class="editor-header">
-      <h2>區塊管理模式</h2>
-      <button class="gray-btn" onclick="toggleEditor(false)">關閉</button>
-    </div>
+<script>
+/* =========================================================
+   老師修改區
+   你只要改這裡：
+   title：左側選單名稱
+   place：程式放置位置
+   type：Script / LocalScript / ModuleScript
+   description：教學說明
+   code：要給學生複製的完整程式碼
 
-    <div class="editor-card">
-      <h3>網站基本資料</h3>
-      <div class="field">
-        <label>網站名稱</label>
-        <input id="editBrand" type="text" />
-      </div>
-      <div class="field">
-        <label>首頁大標題</label>
-        <input id="editHeroTitle" type="text" />
-      </div>
-      <div class="field">
-        <label>首頁簡介</label>
-        <textarea id="editHeroDesc"></textarea>
-      </div>
-      <div class="field">
-        <label>頁尾文字</label>
-        <input id="editFooter" type="text" />
-      </div>
-      <button class="save-btn" onclick="saveSiteInfo()">儲存網站資料</button>
-    </div>
+   注意：
+   code 使用反引號 `  ` 包住，多行程式碼可以直接貼上。
+   如果你的程式碼本身有反引號 `，請改成一般引號或移除。
+========================================================= */
 
-    <div class="editor-card">
-      <h3>選擇要修改的區塊</h3>
-      <div class="field">
-        <label>目前區塊</label>
-        <select id="blockSelect" onchange="loadBlockToEditor()"></select>
-      </div>
-      <div class="row">
-        <button class="edit-btn" onclick="addBlock()">＋ 新增區塊</button>
-        <button class="danger-btn" onclick="deleteCurrentBlock()">刪除區塊</button>
-      </div>
-      <p class="mini-note">新增、修改、刪除後，請按「儲存目前區塊」。</p>
-    </div>
+const lessons = [
+  {
+    title: "交易系統",
+    place: "放置位置：ServerScriptService",
+    type: "類型：Script",
+    description: `功能說明：
+這裡放交易系統程式碼，用來處理玩家之間的交易邏輯。
 
-    <div class="editor-card">
-      <h3>修改區塊內容</h3>
-      <div class="field">
-        <label>選單名稱 / 區塊名稱</label>
-        <input id="editBlockTitle" type="text" placeholder="例如：第 1 課：變數與輸出" />
-      </div>
-      <div class="field">
-        <label>教學說明內容</label>
-        <textarea id="editBlockContent" placeholder="輸入教學說明、操作步驟或課堂任務"></textarea>
-      </div>
-      <div class="field">
-        <label>程式碼標題</label>
-        <input id="editCodeTitle" type="text" placeholder="例如：ServerScriptService 程式碼" />
-      </div>
-      <div class="field">
-        <label>程式碼內容</label>
-        <textarea id="editCode" class="code-input" placeholder="把 Roblox Lua 程式碼放在這裡"></textarea>
-      </div>
-      <div class="field">
-        <label>下載連結，可留空</label>
-        <input id="editDownloadUrl" type="text" placeholder="貼上 Google Drive 或其他下載連結" />
-      </div>
-      <div class="field">
-        <label>下載按鈕文字，可留空</label>
-        <input id="editDownloadText" type="text" placeholder="例如：下載 Roblox 專案檔" />
-      </div>
-      <div class="row">
-        <button class="save-btn" onclick="saveCurrentBlock()">儲存目前區塊</button>
-        <button class="gray-btn" onclick="moveBlock(-1)">上移</button>
-        <button class="gray-btn" onclick="moveBlock(1)">下移</button>
-      </div>
-    </div>
+教學提醒：
+1. 先建立需要的 RemoteEvent。
+2. 再放入 ServerScriptService。
+3. 測試時建議使用多人測試模式。`,
+    code: `-- 請將「交易系統」程式碼貼在這裡
+print("交易系統啟動")`
+  },
+  {
+    title: "MinebloxServer",
+    place: "放置位置：ServerScriptService",
+    type: "類型：Script",
+    description: `功能說明：
+伺服器主程式，負責接收玩家放置方塊、破壞方塊、建造房子、生成炸彈等請求。
 
-    <div class="editor-card">
-      <h3>備份與還原</h3>
-      <p class="mini-note">
-        Google Sites 內嵌頁的修改資料會存在目前瀏覽器。換電腦或清除瀏覽器資料可能會消失，建議修改後按「匯出 JSON」備份。
-      </p>
-      <div class="row">
-        <button class="light-btn" onclick="exportJSON()">匯出 JSON</button>
-        <button class="light-btn" onclick="document.getElementById('jsonFile').click()">匯入 JSON</button>
-        <button class="danger-btn" onclick="resetData()">恢復預設</button>
-      </div>
-      <input id="jsonFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)" />
-    </div>
+教學提醒：
+這支程式通常放在 ServerScriptService。`,
+    code: `-- 請將 MinebloxServer 程式碼貼在這裡
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+print("Mineblox Server 啟動")`
+  },
+  {
+    title: "方塊收集樣式",
+    place: "放置位置：StarterGui 或 StarterPlayerScripts",
+    type: "類型：LocalScript",
+    description: `功能說明：
+顯示方塊收集數量、任務提示或畫面 UI。
 
-    <div class="editor-card">
-      <h3>使用提醒</h3>
-      <p class="mini-note">
-        1. 點右上角「編輯區塊」即可修改內容。<br>
-        2. 修改後會存在本機瀏覽器。<br>
-        3. 若要讓所有學生看到同一份更新內容，請匯出 JSON 後請我幫你整合成新版 HTML。<br>
-        4. Google Sites 若擋掉 JavaScript，請改成 GitHub Pages / Netlify 網址嵌入。
-      </p>
-    </div>
-  </aside>
+教學提醒：
+與畫面有關的程式通常使用 LocalScript。`,
+    code: `-- 請將「方塊收集樣式」程式碼貼在這裡
+local player = game.Players.LocalPlayer
+print(player.Name .. " 的方塊收集 UI 啟動")`
+  },
+  {
+    title: "加速程式",
+    place: "放置位置：StarterPlayer > StarterPlayerScripts",
+    type: "類型：LocalScript",
+    description: `功能說明：
+讓玩家按下按鍵後加速，或調整玩家移動速度。
 
-  <div class="toast" id="toast"></div>
+教學提醒：
+如果是按鍵控制，通常需要 UserInputService。`,
+    code: `-- 請將「加速程式」程式碼貼在這裡
+local player = game.Players.LocalPlayer
+print("加速程式啟動")`
+  },
+  {
+    title: "跳躍力程式",
+    place: "放置位置：StarterPlayer > StarterPlayerScripts",
+    type: "類型：LocalScript",
+    description: `功能說明：
+控制玩家跳躍力，讓角色可以跳得更高。
 
-  <script>
-    const STORAGE_KEY = "roblox_google_sites_editable_blocks_v1";
+教學提醒：
+可修改 Humanoid.JumpPower 或 JumpHeight。`,
+    code: `-- 請將「跳躍力程式」程式碼貼在這裡
+local player = game.Players.LocalPlayer
+print("跳躍力程式啟動")`
+  },
+  {
+    title: "創世神之手程式",
+    place: "放置位置：StarterPack Tool 或 StarterPlayerScripts",
+    type: "類型：LocalScript / Script",
+    description: `功能說明：
+讓玩家像創世神一樣放置方塊、生成物件或觸發建造功能。
 
-    const defaultData = {
-      brand: "Roblox 程式教學站",
-      heroTitle: "Roblox Studio 可編輯教學頁",
-      heroDesc: "這是一個可以放入 Google Sites 的互動式教學頁。老師可以直接修改選單名稱、新增教學區塊、修改內容與程式碼，方便做 Roblox Lua 課程教學。",
-      footer: "翊華教育｜Roblox Studio 程式設計教學頁",
-      activeId: "intro",
-      blocks: [
-        {
-          id: "intro",
-          title: "首頁介紹",
-          content: "用途：\n這個頁面適合用在 Roblox 教學網站、學生作品展示、課程進度整理、寒暑假營隊教材或線上自學平台。\n\n使用方式：\n1. 從左側選單切換不同章節。\n2. 閱讀教學說明。\n3. 複製程式碼到 Roblox Studio。\n4. 完成任務後加入自己的創意。",
-          codeTitle: "本區塊不一定需要程式碼",
-          code: "-- 你可以在這裡放 Roblox Lua 程式碼\nprint(\"Hello Roblox!\")",
-          downloadUrl: "",
-          downloadText: ""
-        },
-        {
-          id: "lesson1",
-          title: "第 1 課：基本輸出",
-          content: "學習重點：\n認識 Roblox Studio 的 Script，學習如何在 Output 視窗輸出文字。\n\n學生任務：\n請修改歡迎文字，加入自己的課程名稱。",
-          codeTitle: "Script：輸出歡迎文字",
-          code: "print(\"歡迎來到 Roblox 程式設計課！\")\nprint(\"今天我們要學習 Lua 基礎語法。\")\n\nlocal courseName = \"Roblox 遊戲設計\"\nprint(\"課程名稱：\" .. courseName)",
-          downloadUrl: "",
-          downloadText: ""
-        },
-        {
-          id: "lesson2",
-          title: "第 2 課：角色速度",
-          content: "學習重點：\n取得玩家角色，調整 Humanoid 的 WalkSpeed 與 JumpPower。\n\n放置位置：\nStarterPlayer > StarterPlayerScripts > LocalScript",
-          codeTitle: "LocalScript：調整玩家速度",
-          code: "local Players = game:GetService(\"Players\")\nlocal player = Players.LocalPlayer\n\nlocal function setupCharacter(character)\n    local humanoid = character:WaitForChild(\"Humanoid\")\n    humanoid.WalkSpeed = 24\n    humanoid.JumpPower = 70\nend\n\nif player.Character then\n    setupCharacter(player.Character)\nend\n\nplayer.CharacterAdded:Connect(setupCharacter)",
-          downloadUrl: "",
-          downloadText: ""
-        },
-        {
-          id: "lesson3",
-          title: "第 3 課：得分系統",
-          content: "學習重點：\n建立排行榜分數，讓玩家進入遊戲後自動擁有 Score 欄位。\n\n放置位置：\nServerScriptService > Script",
-          codeTitle: "ServerScriptService：建立 Leaderstats",
-          code: "local Players = game:GetService(\"Players\")\n\nPlayers.PlayerAdded:Connect(function(player)\n    local leaderstats = Instance.new(\"Folder\")\n    leaderstats.Name = \"leaderstats\"\n    leaderstats.Parent = player\n\n    local score = Instance.new(\"IntValue\")\n    score.Name = \"Score\"\n    score.Value = 0\n    score.Parent = leaderstats\nend)",
-          downloadUrl: "",
-          downloadText: ""
-        },
-        {
-          id: "download",
-          title: "專案檔下載",
-          content: "你可以把 Roblox 專案檔上傳到 Google Drive，取得分享連結後，貼到下方下載連結欄位。",
-          codeTitle: "Google Drive 按鈕範例",
-          code: "<a class=\"main-btn\" href=\"你的 Google Drive 分享連結\" target=\"_blank\">下載 Roblox 專案檔</a>",
-          downloadUrl: "",
-          downloadText: "下載 Roblox 專案檔"
-        }
-      ]
-    };
+教學提醒：
+如果要讓所有玩家看見方塊，需要搭配 RemoteEvent 送到伺服器。`,
+    code: `-- 請將「創世神之手程式」貼在這裡
+print("創世神之手啟動")`
+  },
+  {
+    title: "鏟子程式",
+    place: "放置位置：StarterPack > Tool",
+    type: "類型：LocalScript / Script",
+    description: `功能說明：
+玩家使用鏟子破壞或收集方塊。
 
-    let data = loadData();
+教學提醒：
+工具類程式通常放在 Tool 裡面。`,
+    code: `-- 請將「鏟子程式」貼在這裡
+print("鏟子工具啟動")`
+  },
+  {
+    title: "建造器程式",
+    place: "放置位置：StarterPack > Tool 或 ServerScriptService",
+    type: "類型：Script / LocalScript",
+    description: `功能說明：
+一鍵生成房子、牆壁、道路或指定建築。
 
-    function loadData() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (!saved) return structuredClone(defaultData);
-      try {
-        const parsed = JSON.parse(saved);
-        if (!parsed.blocks || !Array.isArray(parsed.blocks)) return structuredClone(defaultData);
-        return parsed;
-      } catch {
-        return structuredClone(defaultData);
-      }
-    }
+教學提醒：
+大量生成物件建議由伺服器處理。`,
+    code: `-- 請將「建造器程式」貼在這裡
+print("建造器啟動")`
+  },
+  {
+    title: "炸彈程式",
+    place: "放置位置：StarterPack > Tool 或 ServerScriptService",
+    type: "類型：Script / LocalScript",
+    description: `功能說明：
+生成炸彈、倒數、爆炸與破壞範圍效果。
 
-    function persist() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
+教學提醒：
+爆炸效果建議在 ServerScriptService 處理，避免不同玩家畫面不同步。`,
+    code: `-- 請將「炸彈程式」貼在這裡
+print("炸彈程式啟動")`
+  },
+  {
+    title: "遊戲說明",
+    place: "放置位置：StarterGui",
+    type: "類型：LocalScript",
+    description: `功能說明：
+顯示玩家操作說明、任務目標與遊戲玩法。
 
-    function render() {
-      document.getElementById("siteBrand").innerText = data.brand || defaultData.brand;
-      document.getElementById("heroTitle").innerText = data.heroTitle || defaultData.heroTitle;
-      document.getElementById("heroDesc").innerText = data.heroDesc || defaultData.heroDesc;
-      document.getElementById("footerText").innerText = data.footer || defaultData.footer;
+教學提醒：
+畫面 UI 建議放在 StarterGui。`,
+    code: `-- 請將「遊戲說明」程式碼貼在這裡
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+print("遊戲說明 UI 啟動")`
+  }
+];
 
-      const navList = document.getElementById("navList");
-      const sections = document.getElementById("sections");
-      const blockSelect = document.getElementById("blockSelect");
-      navList.innerHTML = "";
-      sections.innerHTML = "";
-      blockSelect.innerHTML = "";
+let currentIndex = 0;
 
-      if (!data.blocks.length) {
-        data.blocks.push({
-          id: makeId(),
-          title: "新區塊",
-          content: "請輸入內容",
-          codeTitle: "程式碼",
-          code: "-- 請輸入程式碼",
-          downloadUrl: "",
-          downloadText: ""
-        });
-      }
+function escapeHTML(text){
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
+}
 
-      if (!data.blocks.some(b => b.id === data.activeId)) {
-        data.activeId = data.blocks[0].id;
-      }
+function renderMenu(){
+  const menu = document.getElementById("menu");
+  menu.innerHTML = "";
 
-      data.blocks.forEach((block, index) => {
-        const navBtn = document.createElement("button");
-        navBtn.className = "nav-btn" + (block.id === data.activeId ? " active" : "");
-        navBtn.onclick = () => showSection(block.id);
-        navBtn.innerHTML = `
-          <span class="nav-title">
-            <span class="nav-index">${index + 1}</span>
-            <span class="nav-text">${escapeHTML(block.title || "未命名區塊")}</span>
-          </span>
-          <span>›</span>
-        `;
-        navList.appendChild(navBtn);
+  lessons.forEach((lesson,index)=>{
+    const btn = document.createElement("button");
+    btn.className = "nav-btn" + (index === currentIndex ? " active" : "");
+    btn.onclick = () => showLesson(index);
+    btn.innerHTML = `
+      <span class="nav-left">
+        <span class="nav-num">${index + 1}</span>
+        <span class="nav-text">${escapeHTML(lesson.title)}</span>
+      </span>
+      <span>›</span>
+    `;
+    menu.appendChild(btn);
+  });
+}
 
-        const option = document.createElement("option");
-        option.value = block.id;
-        option.textContent = `${index + 1}. ${block.title || "未命名區塊"}`;
-        blockSelect.appendChild(option);
+function showLesson(index){
+  currentIndex = index;
+  const lesson = lessons[index];
 
-        const section = document.createElement("section");
-        section.className = "section" + (block.id === data.activeId ? " active" : "");
-        section.id = block.id;
+  document.getElementById("lessonTitle").innerText = lesson.title;
+  document.getElementById("lessonDescription").innerText = lesson.description;
+  document.getElementById("lessonPlace").innerText = lesson.place;
+  document.getElementById("lessonType").innerText = lesson.type;
+  document.getElementById("codeTitle").innerText = lesson.title + "｜程式碼";
+  document.getElementById("lessonCode").innerText = lesson.code;
 
-        const codeId = `code_${block.id}`;
-        const hasDownload = block.downloadUrl && block.downloadText;
-        section.innerHTML = `
-          <div class="grid">
-            <div class="card">
-              <h2>${escapeHTML(block.title || "未命名區塊")}</h2>
-              <p>${escapeHTML(block.content || "")}</p>
-              ${hasDownload ? `
-                <div class="download-box">
-                  <a class="main-btn" href="${escapeAttr(block.downloadUrl)}" target="_blank" rel="noopener">${escapeHTML(block.downloadText)}</a>
-                </div>
-              ` : ""}
-            </div>
-            <div class="card code-card">
-              <div class="code-head">
-                <strong>${escapeHTML(block.codeTitle || "程式碼")}</strong>
-                <button class="copy-btn" onclick="copyCode('${codeId}')">複製程式碼</button>
-              </div>
-              <pre><code id="${codeId}">${escapeHTML(block.code || "")}</code></pre>
-            </div>
-          </div>
-        `;
-        sections.appendChild(section);
-      });
+  renderMenu();
 
-      blockSelect.value = data.activeId;
-      loadSiteInfoToEditor();
-      loadBlockToEditor();
-    }
+  if(window.innerWidth <= 860){
+    document.getElementById("sidebar").classList.remove("open");
+  }
+}
 
-    function showSection(id) {
-      data.activeId = id;
-      persist();
+function copyCurrentCode(){
+  const code = lessons[currentIndex].code;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(code).then(()=>{
+      alert("程式碼已複製，可以貼到 Roblox Studio。");
+    }).catch(()=>{
+      alert("無法自動複製，請手動選取程式碼。");
+    });
+  }else{
+    alert("此瀏覽器不支援自動複製，請手動選取程式碼。");
+  }
+}
 
-      document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
-      const target = document.getElementById(id);
-      if (target) target.classList.add("active");
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("open");
+}
 
-      document.querySelectorAll(".nav-btn").forEach((nav, index) => {
-        nav.classList.toggle("active", data.blocks[index].id === id);
-      });
-
-      document.getElementById("blockSelect").value = id;
-      loadBlockToEditor();
-
-      if (window.innerWidth < 1100) toggleMenu(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function toggleMenu(force) {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      const shouldOpen = typeof force === "boolean" ? force : !sidebar.classList.contains("open");
-      sidebar.classList.toggle("open", shouldOpen);
-      overlay.classList.toggle("show", shouldOpen);
-    }
-
-    function toggleEditor(force) {
-      const panel = document.getElementById("editorPanel");
-      const shouldOpen = typeof force === "boolean" ? force : !panel.classList.contains("open");
-      panel.classList.toggle("open", shouldOpen);
-      if (shouldOpen) {
-        loadSiteInfoToEditor();
-        loadBlockToEditor();
-      }
-    }
-
-    function loadSiteInfoToEditor() {
-      document.getElementById("editBrand").value = data.brand || "";
-      document.getElementById("editHeroTitle").value = data.heroTitle || "";
-      document.getElementById("editHeroDesc").value = data.heroDesc || "";
-      document.getElementById("editFooter").value = data.footer || "";
-    }
-
-    function saveSiteInfo() {
-      data.brand = document.getElementById("editBrand").value.trim() || defaultData.brand;
-      data.heroTitle = document.getElementById("editHeroTitle").value.trim() || defaultData.heroTitle;
-      data.heroDesc = document.getElementById("editHeroDesc").value.trim() || defaultData.heroDesc;
-      data.footer = document.getElementById("editFooter").value.trim() || defaultData.footer;
-      persist();
-      render();
-      toast("網站基本資料已儲存");
-    }
-
-    function loadBlockToEditor() {
-      const id = document.getElementById("blockSelect").value || data.activeId;
-      const block = data.blocks.find(b => b.id === id) || data.blocks[0];
-      if (!block) return;
-
-      data.activeId = block.id;
-      document.getElementById("editBlockTitle").value = block.title || "";
-      document.getElementById("editBlockContent").value = block.content || "";
-      document.getElementById("editCodeTitle").value = block.codeTitle || "";
-      document.getElementById("editCode").value = block.code || "";
-      document.getElementById("editDownloadUrl").value = block.downloadUrl || "";
-      document.getElementById("editDownloadText").value = block.downloadText || "";
-    }
-
-    function saveCurrentBlock() {
-      const id = document.getElementById("blockSelect").value || data.activeId;
-      const block = data.blocks.find(b => b.id === id);
-      if (!block) return;
-
-      block.title = document.getElementById("editBlockTitle").value.trim() || "未命名區塊";
-      block.content = document.getElementById("editBlockContent").value;
-      block.codeTitle = document.getElementById("editCodeTitle").value.trim() || "程式碼";
-      block.code = document.getElementById("editCode").value;
-      block.downloadUrl = document.getElementById("editDownloadUrl").value.trim();
-      block.downloadText = document.getElementById("editDownloadText").value.trim();
-
-      data.activeId = block.id;
-      persist();
-      render();
-      toast("目前區塊已儲存");
-    }
-
-    function addBlock() {
-      const newBlock = {
-        id: makeId(),
-        title: "新增教學區塊",
-        content: "請在這裡輸入教學內容。\n\n可以放：\n1. 學習目標\n2. 操作步驟\n3. 學生任務\n4. 延伸挑戰",
-        codeTitle: "程式碼範例",
-        code: "-- 在這裡貼上 Roblox Lua 程式碼\nprint(\"New Lesson\")",
-        downloadUrl: "",
-        downloadText: ""
-      };
-      data.blocks.push(newBlock);
-      data.activeId = newBlock.id;
-      persist();
-      render();
-      toast("已新增區塊");
-    }
-
-    function deleteCurrentBlock() {
-      if (data.blocks.length <= 1) {
-        toast("至少需要保留一個區塊");
-        return;
-      }
-      const id = document.getElementById("blockSelect").value || data.activeId;
-      const block = data.blocks.find(b => b.id === id);
-      if (!block) return;
-      if (!confirm(`確定要刪除「${block.title}」嗎？`)) return;
-
-      const index = data.blocks.findIndex(b => b.id === id);
-      data.blocks.splice(index, 1);
-      data.activeId = data.blocks[Math.max(0, index - 1)].id;
-      persist();
-      render();
-      toast("區塊已刪除");
-    }
-
-    function moveBlock(direction) {
-      const id = document.getElementById("blockSelect").value || data.activeId;
-      const index = data.blocks.findIndex(b => b.id === id);
-      const nextIndex = index + direction;
-      if (index < 0 || nextIndex < 0 || nextIndex >= data.blocks.length) {
-        toast("無法再移動");
-        return;
-      }
-      const temp = data.blocks[index];
-      data.blocks[index] = data.blocks[nextIndex];
-      data.blocks[nextIndex] = temp;
-      data.activeId = id;
-      persist();
-      render();
-      toast("區塊順序已更新");
-    }
-
-    function copyCode(id) {
-      const codeEl = document.getElementById(id);
-      if (!codeEl) return;
-      const code = codeEl.innerText;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(code).then(() => {
-          toast("程式碼已複製");
-        }).catch(() => {
-          fallbackCopy(code);
-        });
-      } else {
-        fallbackCopy(code);
-      }
-    }
-
-    function fallbackCopy(text) {
-      const temp = document.createElement("textarea");
-      temp.value = text;
-      document.body.appendChild(temp);
-      temp.select();
-      try {
-        document.execCommand("copy");
-        toast("程式碼已複製");
-      } catch {
-        toast("請手動選取程式碼複製");
-      }
-      document.body.removeChild(temp);
-    }
-
-    function exportJSON() {
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "roblox_teaching_blocks_backup.json";
-      a.click();
-      URL.revokeObjectURL(url);
-      toast("JSON 已匯出");
-    }
-
-    function importJSON(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const imported = JSON.parse(e.target.result);
-          if (!imported.blocks || !Array.isArray(imported.blocks)) {
-            toast("JSON 格式不正確");
-            return;
-          }
-          data = imported;
-          if (!data.activeId && data.blocks[0]) data.activeId = data.blocks[0].id;
-          persist();
-          render();
-          toast("JSON 已匯入");
-        } catch {
-          toast("JSON 讀取失敗");
-        }
-      };
-      reader.readAsText(file, "UTF-8");
-      event.target.value = "";
-    }
-
-    function resetData() {
-      if (!confirm("確定要恢復預設內容嗎？目前瀏覽器儲存的修改會被覆蓋。")) return;
-      data = structuredClone(defaultData);
-      persist();
-      render();
-      toast("已恢復預設內容");
-    }
-
-    function makeId() {
-      return "block_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 7);
-    }
-
-    function escapeHTML(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function escapeAttr(str) {
-      return escapeHTML(str).replaceAll("\n", "");
-    }
-
-    function toast(message) {
-      const t = document.getElementById("toast");
-      t.innerText = message;
-      t.classList.add("show");
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
-    }
-
-    render();
-  </script>
+renderMenu();
+showLesson(0);
+</script>
 </body>
 </html>
