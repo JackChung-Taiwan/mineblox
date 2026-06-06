@@ -266,6 +266,288 @@
     .brand { font-size:20px; }
     .collapse-btn { width:100%; font-size:15px; }
   }
+
+  /* =========================
+     響應式強化版
+     ========================= */
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .content {
+    min-width: 0;
+  }
+
+  .card {
+    min-width: 0;
+  }
+
+  .code-wrap {
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .line-code {
+    tab-size: 4;
+  }
+
+  @media (min-width: 1200px) {
+    .content {
+      padding: 28px;
+    }
+
+    .code-wrap {
+      max-height: 780px;
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .layout {
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      padding: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px;
+      font-size: 15px;
+    }
+
+    .lesson-body h2 {
+      font-size: 28px;
+    }
+
+    .lesson-body p {
+      font-size: 19px;
+    }
+
+    .section-label {
+      font-size: 21px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .topbar {
+      align-items: stretch;
+    }
+
+    .brand {
+      width: 100%;
+      align-items: flex-start;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .cube {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+    }
+
+    .collapse-btn {
+      width: 100%;
+      min-height: 44px;
+    }
+
+    .layout {
+      display: block;
+      min-height: auto;
+    }
+
+    .sidebar {
+      display: none;
+      width: 100%;
+      max-height: 50vh;
+      overflow-y: auto;
+      border-right: 0;
+      border-bottom: 6px solid var(--dirt);
+      position: relative;
+      top: auto;
+    }
+
+    .layout:not(.sidebar-collapsed) .sidebar {
+      display: block;
+    }
+
+    .layout.sidebar-collapsed .sidebar {
+      display: none;
+    }
+
+    .content {
+      padding: 12px;
+    }
+
+    .card {
+      border-width: 4px;
+      box-shadow: 5px 5px 0 rgba(75,47,26,.34);
+    }
+
+    .lesson-body {
+      padding: 18px;
+    }
+
+    .lesson-body h2 {
+      font-size: 25px;
+      line-height: 1.25;
+    }
+
+    .lesson-body p {
+      font-size: 18px;
+      line-height: 1.85;
+    }
+
+    .section-label {
+      font-size: 20px;
+    }
+
+    .tag {
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .code-head {
+      align-items: stretch;
+    }
+
+    .code-head strong {
+      width: 100%;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      width: 100%;
+      min-height: 44px;
+    }
+
+    .code-wrap {
+      max-height: 62vh;
+      font-size: 13px;
+    }
+
+    .code-line {
+      grid-template-columns: 46px 1fr;
+    }
+
+    .line-no {
+      padding: 0 8px 0 4px;
+    }
+
+    .line-code {
+      padding: 0 12px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .topbar {
+      padding: 12px;
+    }
+
+    .brand {
+      font-size: 16px;
+    }
+
+    .cube {
+      width: 34px;
+      height: 34px;
+      border-width: 3px;
+    }
+
+    .nav-btn {
+      margin: 8px 0;
+      padding: 10px;
+      border-width: 3px;
+      box-shadow: 3px 3px 0 rgba(0,0,0,.22);
+    }
+
+    .nav-num {
+      width: 26px;
+      height: 26px;
+      font-size: 12px;
+      border-width: 2px;
+    }
+
+    .lesson-body {
+      padding: 14px;
+    }
+
+    .lesson-body h2 {
+      font-size: 22px;
+    }
+
+    .lesson-body p {
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .section-label {
+      font-size: 18px;
+    }
+
+    .meta {
+      gap: 8px;
+    }
+
+    .tag {
+      width: 100%;
+      font-size: 13px;
+    }
+
+    .code-head {
+      padding: 12px;
+    }
+
+    .code-wrap {
+      font-size: 12.5px;
+      line-height: 1.6;
+      max-height: 58vh;
+    }
+
+    .code-line {
+      grid-template-columns: 42px 1fr;
+    }
+
+    .line-no {
+      font-size: 12px;
+    }
+
+    .footer {
+      font-size: 13px;
+      padding: 14px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .brand {
+      font-size: 15px;
+    }
+
+    .lesson-body h2 {
+      font-size: 20px;
+    }
+
+    .lesson-body p {
+      font-size: 16px;
+    }
+
+    .code-wrap {
+      font-size: 12px;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -275,10 +557,10 @@
       <div class="cube">R</div>
       <div>從零開始!在Roblox打造你的麥塊世界</div>
     </div>
-    <button class="collapse-btn" onclick="toggleSidebar()">☰ 收合選單</button>
+    <button class="collapse-btn" onclick="toggleSidebar()" aria-label="開啟或收合章節選單">☰ 選單</button>
   </header>
 
-  <div class="layout" id="mainLayout">
+  <div class="layout sidebar-collapsed" id="mainLayout">
     <aside class="sidebar" id="sidebar">
       <div id="menu"></div>
     </aside>
@@ -323,7 +605,8 @@ function formatDescription(lesson) {
 }
 
 function toggleSidebar() {
-  document.getElementById("mainLayout").classList.toggle("sidebar-collapsed");
+  const layout = document.getElementById("mainLayout");
+  layout.classList.toggle("sidebar-collapsed");
 }
 
 function renderMenu() {
